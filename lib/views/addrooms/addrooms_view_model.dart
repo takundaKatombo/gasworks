@@ -14,13 +14,13 @@ class AddRoomsViewModel extends ChangeNotifier {
   final widthController = TextEditingController();
   final heightController = TextEditingController();
   bool noRoom = false;
-  bool showAddroom = true;
+  bool showAddroom = false;
   num height = 0;
   num width = 0;
   num length = 0;
   String? roomName;
   num area = 0;
-  Map roomsList = {'lounge': 70.0, 'kitchen': 50.0, 'dining': 40.0};
+  Map roomsList = {};
   addRoomPressed() {}
   void saveContinuePressed() {
     _navigationService.navigateTo(AddAppliancesRoute);
@@ -36,11 +36,12 @@ class AddRoomsViewModel extends ChangeNotifier {
   }
 
   void addToRoomList() {
-    roomsList['roomName'] = 50.0;
-    roomName = '';
-    height = 0;
-    width = 0;
-    length = 0;
+    roomsList[roomNameController.text.trim()] = area;
+    roomNameController.text = '';
+    heightController.text = '';
+    widthController.text = '';
+    lengthController.text = '';
+    area = 0.0;
     notifyListeners();
   }
 
@@ -62,8 +63,13 @@ class AddRoomsViewModel extends ChangeNotifier {
   }
 
   void checkAddRoom() {
+    height = stringToDouble_tryParse(heightController.text.trim())!;
+    width = stringToDouble_tryParse(widthController.text.trim())!;
+    length = stringToDouble_tryParse(lengthController.text.trim())!;
+
     if (height != 0 && width != 0 && length != 0) {
       area = height * width * length;
+      showAddroom = true;
       notifyListeners();
     }
   }
@@ -85,9 +91,10 @@ class AddRoomsViewModel extends ChangeNotifier {
     checkAddRoom();
   }
 
-  Future<void> showNotNumericDialog() async {
+  Future<void> showFailedValidation() async {
     await _dialogService.showDialog(
-        title: "Please enter a numeric value",
-        description: "Value Entered not numeric ... Please enter a number");
+        title: "Validation Failed",
+        description:
+            "Either length width or height is not a number ..... Please enter again ");
   }
 }

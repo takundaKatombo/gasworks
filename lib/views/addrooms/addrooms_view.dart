@@ -64,7 +64,7 @@ class AddRooms extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
                                 Container(
-                                  height: height * 0.06,
+                                  height: height * 0.08,
                                   width: width * 0.4,
                                   decoration: BoxDecoration(
                                       border: Border.all(),
@@ -75,15 +75,19 @@ class AddRooms extends StatelessWidget {
                                       controller: model.roomNameController,
                                       decoration: new InputDecoration.collapsed(
                                           hintText: 'Room Name'),
-                                      onEditingComplete: () {
-                                        model.validateRoomName(
-                                            model.roomNameController.text);
+                                      validator: (val) {
+                                        if (model.roomNameController.text !=
+                                            null) {
+                                          return null;
+                                        } else {
+                                          return 'cannot be empty';
+                                        }
                                       },
                                     ),
                                   ),
                                 ),
                                 Container(
-                                  height: height * 0.06,
+                                  height: height * 0.08,
                                   width: width * 0.4,
                                   decoration: BoxDecoration(
                                       border: Border.all(),
@@ -95,14 +99,15 @@ class AddRooms extends StatelessWidget {
                                       keyboardType: TextInputType.number,
                                       decoration: new InputDecoration.collapsed(
                                           hintText: 'Length'),
-                                      onSaved: (val) {
+                                      validator: (val) {
                                         if (model
                                             .isNumericUsingRegularExpression(
                                                 val!)) {
-                                          model.length = model
-                                              .stringToDouble_tryParse(val)!;
+                                          return null;
                                         } else {
-                                          model.showNotNumericDialog();
+                                          return 'can only be numeric';
+
+                                          // return 'Length can only be a number';
                                         }
                                       },
                                     ),
@@ -116,7 +121,7 @@ class AddRooms extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               Container(
-                                height: height * 0.06,
+                                height: height * 0.08,
                                 width: width * 0.4,
                                 decoration: BoxDecoration(
                                     border: Border.all(),
@@ -128,20 +133,21 @@ class AddRooms extends StatelessWidget {
                                     keyboardType: TextInputType.number,
                                     decoration: new InputDecoration.collapsed(
                                         hintText: 'Width'),
-                                    onSaved: (val) {
+                                    validator: (val) {
                                       if (model.isNumericUsingRegularExpression(
                                           val!)) {
-                                        model.width =
-                                            model.stringToDouble_tryParse(val)!;
+                                        return null;
                                       } else {
-                                        model.showNotNumericDialog();
+                                        return 'can only be numeric';
+
+                                        // return 'Width can only be a number ';
                                       }
                                     },
                                   ),
                                 ),
                               ),
                               Container(
-                                height: height * 0.06,
+                                height: height * 0.08,
                                 width: width * 0.4,
                                 decoration: BoxDecoration(
                                     border: Border.all(),
@@ -153,24 +159,22 @@ class AddRooms extends StatelessWidget {
                                     keyboardType: TextInputType.number,
                                     decoration: new InputDecoration.collapsed(
                                         hintText: 'Height'),
-                                    onSaved: (val) {
+                                    validator: (val) {
                                       if (model.isNumericUsingRegularExpression(
                                           val!)) {
-                                        if (model
-                                                .stringToDouble_tryParse(val) !=
-                                            null) {
-                                          model.height =
-                                              model.stringToDouble_tryParse(
-                                                  model.heightController.text
-                                                      .trim())!;
-                                        } else {
-                                          model.showNotNumericDialog();
-                                        }
+                                        return null;
                                       } else {
-                                        model.showNotNumericDialog();
+                                        return 'can only be numeric';
+                                        // return 'Height can only be a number ';
                                       }
-                                      model.validateLength(
-                                          model.lengthController.text);
+                                    },
+                                    onFieldSubmitted: (val) {
+                                      if (model.formKey.currentState!
+                                          .validate()) {
+                                        model.checkAddRoom();
+                                      } else {
+                                        model.showFailedValidation();
+                                      }
                                     },
                                   ),
                                 ),
@@ -267,7 +271,7 @@ class AddRooms extends StatelessWidget {
                         ),
                       ),
                       Container(
-                        height: height * 0.3,
+                        height: height * 0.25,
                         child: ListView.builder(
                             itemCount: model.roomsList.length,
                             itemBuilder: (BuildContext context, int index) {
@@ -317,24 +321,25 @@ class AddRooms extends StatelessWidget {
                                 ),
                               ); //todo:Pass map key as key for item deletion
                             }),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Align(
+                          alignment: Alignment.bottomRight,
+                          child: ElevatedButton(
+                            onPressed:
+                                model.noRoom || model.roomsList.isNotEmpty
+                                    ? () {
+                                        model.saveContinuePressed();
+                                      }
+                                    : null,
+                            child: Text("Save and Continue"),
+                          ),
+                        ),
                       )
                     ],
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Align(
-                    alignment: Alignment.bottomRight,
-                    child: ElevatedButton(
-                      onPressed: model.noRoom || model.roomsList.isNotEmpty
-                          ? () {
-                              model.saveContinuePressed();
-                            }
-                          : null,
-                      child: Text("Save and Continue"),
-                    ),
-                  ),
-                )
               ],
             ),
           );
