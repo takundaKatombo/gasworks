@@ -26,8 +26,22 @@ class AddRoomsViewModel extends ChangeNotifier {
     _navigationService.navigateTo(AddAppliancesRoute);
   }
 
-  noRooms(bool newValue) {
-    noRoom = newValue;
+  noRooms(bool newValue) async {
+    if (newValue == true && roomsList.isNotEmpty) {
+      var response = await _dialogService.showConfirmationDialog(
+          title: "RoomList Is Not Empty",
+          description:
+              "Action will delete RoomList. Are you sure you want to continue?",
+          confirmationTitle: "Yes",
+          cancelTitle: "No");
+      if (response!.confirmed) {
+        roomsList.clear();
+        noRoom = newValue;
+      }
+    } else {
+      noRoom = newValue;
+    }
+
     notifyListeners();
   }
 
