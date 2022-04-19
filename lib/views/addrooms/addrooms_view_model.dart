@@ -31,7 +31,7 @@ class AddRoomsViewModel extends ChangeNotifier {
       var response = await _dialogService.showConfirmationDialog(
           title: "RoomList Is Not Empty",
           description:
-              "Action will delete RoomList. Are you sure you want to continue?",
+              "Action will delete all items in RoomList. Are you sure you want to continue?",
           confirmationTitle: "Yes",
           cancelTitle: "No");
       if (response!.confirmed) {
@@ -56,6 +56,7 @@ class AddRoomsViewModel extends ChangeNotifier {
     widthController.text = '';
     lengthController.text = '';
     area = 0.0;
+    showAddroom = false;
     notifyListeners();
   }
 
