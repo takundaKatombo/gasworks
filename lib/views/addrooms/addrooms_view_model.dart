@@ -4,6 +4,7 @@ import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 import '../../locator.dart';
+import '../../models/app_model.dart';
 
 class AddRoomsViewModel extends ChangeNotifier {
   final NavigationService _navigationService = locator<NavigationService>();
@@ -20,14 +21,14 @@ class AddRoomsViewModel extends ChangeNotifier {
   num length = 0;
   String? roomName;
   num area = 0;
-  Map roomsList = {};
+  final roomsList = locator<AppModel>();
   addRoomPressed() {}
   void saveContinuePressed() {
     _navigationService.navigateTo(AddAppliancesRoute);
   }
 
   noRooms(bool newValue) async {
-    if (newValue == true && roomsList.isNotEmpty) {
+    if (newValue == true && roomsList.roomsList.isNotEmpty) {
       var response = await _dialogService.showConfirmationDialog(
           title: "RoomList Is Not Empty",
           description:
@@ -35,7 +36,7 @@ class AddRoomsViewModel extends ChangeNotifier {
           confirmationTitle: "Yes",
           cancelTitle: "No");
       if (response!.confirmed) {
-        roomsList.clear();
+        roomsList.roomsList.clear();
         noRoom = newValue;
       }
     } else {
@@ -49,19 +50,26 @@ class AddRoomsViewModel extends ChangeNotifier {
     return num.tryParse(input)!;
   }
 
-  void addToRoomList() {
-    roomsList[roomNameController.text.trim()] = area;
-    roomNameController.text = '';
-    heightController.text = '';
-    widthController.text = '';
-    lengthController.text = '';
-    area = 0.0;
-    showAddroom = false;
-    notifyListeners();
+  Future<void> addToRoomList() async {
+    if (roomNameController.text.isNotEmpty && area != 0) {
+      roomsList.roomsList[roomNameController.text.trim()] = area;
+      roomNameController.text = '';
+      heightController.text = '';
+      widthController.text = '';
+      lengthController.text = '';
+      area = 0.0;
+      showAddroom = false;
+      notifyListeners();
+    } else {
+      await _dialogService.showDialog(
+          title: "Validation Failed",
+          description:
+              "roomname length width and height cannot be empty  ..... Please try again ");
+    }
   }
 
   void removeRoom(key) {
-    roomsList.remove(key);
+    roomsList.roomsList.remove(key);
     notifyListeners();
   }
 
@@ -77,7 +85,7 @@ class AddRoomsViewModel extends ChangeNotifier {
     return double.tryParse(input);
   }
 
-  void checkAddRoom() {
+  Future<void> checkAddRoom() async {
     height = stringToDouble_tryParse(heightController.text.trim())!;
     width = stringToDouble_tryParse(widthController.text.trim())!;
     length = stringToDouble_tryParse(lengthController.text.trim())!;
@@ -86,6 +94,11 @@ class AddRoomsViewModel extends ChangeNotifier {
       area = height * width * length;
       showAddroom = true;
       notifyListeners();
+    } else {
+      await _dialogService.showDialog(
+          title: "Validation Failed",
+          description:
+              "length width and height cannot be empty  ..... Please enter again ");
     }
   }
 
