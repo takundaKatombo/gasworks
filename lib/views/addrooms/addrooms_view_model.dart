@@ -125,4 +125,8 @@ class AddRoomsViewModel extends ChangeNotifier {
         description:
             "Either length width or height is not a number ..... Please enter again ");
   }
+
+  void addNA() {
+    roomsList.roomsList['N/A'] = 0.0;
+  }
 }

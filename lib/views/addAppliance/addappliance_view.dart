@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:gasworks/views/addAppliance/addappliance_view_model.dart';
 import 'package:stacked/stacked.dart';
 
@@ -56,22 +57,20 @@ class AddAppliance extends StatelessWidget {
                       Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
+                            Text('Appliance Name'),
                             Container(
                               height: height * 0.08,
-                              width: width * 0.4,
-                              decoration: BoxDecoration(
-                                  border: Border.all(),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(10))),
+                              width: width * 0.3,
                               child: Center(
                                 child: TextFormField(
                                   controller: model.applianceNameController,
-                                  decoration: new InputDecoration.collapsed(
-                                      hintText: 'Appliance Name'),
                                   validator: (val) {
                                     if (model
                                         .applianceNameController.text.isEmpty) {
                                       return 'cannot be empty';
+                                    } else if (model.appliances.containsKey(
+                                        model.applianceNameController.text)) {
+                                      return 'cannot have duplicate values ';
                                     } else {
                                       return null;
                                     }
@@ -79,19 +78,18 @@ class AddAppliance extends StatelessWidget {
                                 ),
                               ),
                             ),
+                            Text('tees'),
                             Container(
                               height: height * 0.08,
-                              width: width * 0.4,
-                              decoration: BoxDecoration(
-                                  border: Border.all(),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(10))),
+                              width: width * 0.3,
+                              // decoration: BoxDecoration(
+                              //     border: Border.all(),
+                              //     borderRadius:
+                              //         BorderRadius.all(Radius.circular(10))),
                               child: Center(
                                 child: TextFormField(
                                   controller: model.teesController,
                                   keyboardType: TextInputType.number,
-                                  decoration: new InputDecoration.collapsed(
-                                      hintText: 'tees in this line'),
                                   validator: (val) {
                                     if (model.isNumericUsingRegularExpression(
                                         val!)) {
@@ -112,19 +110,14 @@ class AddAppliance extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
+                          Text('Elbows'),
                           Container(
                             height: height * 0.08,
-                            width: width * 0.4,
-                            decoration: BoxDecoration(
-                                border: Border.all(),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10))),
+                            width: width * 0.2,
                             child: Center(
                               child: TextFormField(
                                 controller: model.elbowsController,
                                 keyboardType: TextInputType.number,
-                                decoration: new InputDecoration.collapsed(
-                                    hintText: 'elbows in this line'),
                                 validator: (val) {
                                   if (model
                                       .isNumericUsingRegularExpression(val!)) {
@@ -138,19 +131,15 @@ class AddAppliance extends StatelessWidget {
                               ),
                             ),
                           ),
+                          Text('Bends'),
                           Container(
                             height: height * 0.08,
-                            width: width * 0.4,
-                            decoration: BoxDecoration(
-                                border: Border.all(),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10))),
+                            width: width * 0.2,
                             child: Center(
                               child: TextFormField(
                                 controller: model.bendsController,
                                 keyboardType: TextInputType.number,
-                                decoration: new InputDecoration.collapsed(
-                                    hintText: 'bends in this line'),
+
                                 validator: (val) {
                                   if (model
                                       .isNumericUsingRegularExpression(val!)) {
@@ -268,16 +257,16 @@ class AddAppliance extends StatelessWidget {
                               width: width * 0.02,
                             ),
                             Radio(
-                                value: true,
+                                value: 'true',
                                 groupValue: model.deviceFlued,
-                                onChanged: (bool? val) {
+                                onChanged: (String? val) {
                                   model.deviceFluedSet(val!);
                                 }),
                             Text("Yes"),
                             Radio(
-                                value: false,
+                                value: 'false',
                                 groupValue: model.deviceFlued,
-                                onChanged: (bool? val) {
+                                onChanged: (String? val) {
                                   model.deviceFluedSet(val!);
                                 }),
                             Text("No"),
@@ -307,18 +296,14 @@ class AddAppliance extends StatelessWidget {
                       Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
+                            Text('Segment Label'),
                             Container(
                               height: height * 0.08,
-                              width: width * 0.4,
-                              decoration: BoxDecoration(
-                                  border: Border.all(),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(10))),
+                              width: width * 0.3,
                               child: Center(
                                 child: TextFormField(
+                                  inputFormatters: [UpperCaseTextFormatter()],
                                   controller: model.segmentLabelController,
-                                  decoration: new InputDecoration.collapsed(
-                                      hintText: 'Segmanet Label'),
                                   validator: (val) {
                                     if (model
                                         .segmentLabelController.text.isEmpty) {
@@ -328,27 +313,20 @@ class AddAppliance extends StatelessWidget {
                                         2) {
                                       return 'can only be 2 chars';
                                     } else {
-                                      model.segmentLabelController.text
-                                          .toUpperCase();
                                       return null;
                                     }
                                   },
                                 ),
                               ),
                             ),
+                            Text('Meters'),
                             Container(
                               height: height * 0.08,
-                              width: width * 0.4,
-                              decoration: BoxDecoration(
-                                  border: Border.all(),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(10))),
+                              width: width * 0.2,
                               child: Center(
                                 child: TextFormField(
-                                  // controller: model.lengthController,
+                                  controller: model.lengthController,
                                   keyboardType: TextInputType.number,
-                                  decoration: new InputDecoration.collapsed(
-                                      hintText: 'Meters'),
                                   validator: (val) {
                                     if (model.isNumericUsingRegularExpression(
                                         val!)) {
@@ -396,7 +374,15 @@ class AddAppliance extends StatelessWidget {
                           children: [
                             ElevatedButton(
                                 onPressed: () {
-                                  model.onAddSegmentPressed();
+                                  if (model.formKey.currentState!.validate() &&
+                                      model.lineHpLp.isNotEmpty &&
+                                      model.deviceFlued.isNotEmpty &&
+                                      model.lineHpLp.isNotEmpty) {
+                                    model.onAddSegmentPressed();
+                                    model.clearFields();
+                                  } else {
+                                    model.showValidationFailed();
+                                  }
                                 },
                                 child: Text('Add Segment'))
                           ],
@@ -459,8 +445,9 @@ class AddAppliance extends StatelessWidget {
                             itemCount: model.segments.length,
                             itemBuilder: (BuildContext context, int index) {
                               String key = model.segments.keys.elementAt(index);
-                              double area =
-                                  model.segments.values.elementAt(index);
+                              String area = model.segments.values
+                                  .elementAt(index)
+                                  .toString();
                               return Container(
                                 height: 50,
                                 // width: width * 0.95,
@@ -535,7 +522,7 @@ class AddAppliance extends StatelessWidget {
                             itemBuilder: (BuildContext context, int index) {
                               String key =
                                   model.appliances.keys.elementAt(index);
-                              double area =
+                              double length =
                                   model.appliances.values.elementAt(index);
                               return Padding(
                                 padding: const EdgeInsets.all(8.0),
@@ -560,7 +547,7 @@ class AddAppliance extends StatelessWidget {
                                       Container(
                                         width: width * 0.4,
                                         child: Text(
-                                          "15",
+                                          length.toString(),
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 18),
@@ -582,7 +569,9 @@ class AddAppliance extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             ElevatedButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  model.saveApplianceAndAdd();
+                                },
                                 child: Text('Save and Add Another ')),
                             ElevatedButton(
                                 onPressed: () {},
@@ -597,5 +586,14 @@ class AddAppliance extends StatelessWidget {
             ),
           );
         });
+  }
+}
+
+class UpperCaseTextFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    return TextEditingValue(
+        text: newValue.text.toUpperCase(), selection: newValue.selection);
   }
 }

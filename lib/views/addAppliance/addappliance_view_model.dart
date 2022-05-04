@@ -14,13 +14,13 @@ class AddApplianceViewModel extends ChangeNotifier {
   final elbowsController = TextEditingController();
   final bendsController = TextEditingController();
   double totalDemand = 0;
-  Map segments = {};
-  Map appliances = {};
-  bool? deviceFlued; //TODO:check if null
+  Map<String, double> segments = {};
+  Map<String, double> appliances = {};
+  String deviceFlued = ''; //TODO:check if null
   String segmentLabel = '';
   double meters = 0;
-  String roomName = 'test';
-  var totalDemandController;
+  String roomName = 'N/A';
+  final totalDemandController = TextEditingController();
 
   String tdUnit = '';
 
@@ -28,7 +28,10 @@ class AddApplianceViewModel extends ChangeNotifier {
 
   final segmentLabelController = TextEditingController();
 
-  double totalLength = 15.0; //TODO:Calculate total Length
+  double totalLength = 15.0;
+
+  final lengthController =
+      TextEditingController(); //TODO:Calculate total Length
   bool isNumericUsingRegularExpression(String string) {
     print("in isnumeric");
     final numericRegex = RegExp(r'^-?(([0-9]*)|(([0-9]*)\.([0-9]*)))$');
@@ -51,8 +54,8 @@ class AddApplianceViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void deviceFluedSet(bool bool) {
-    deviceFlued = bool;
+  void deviceFluedSet(String val) {
+    deviceFlued = val;
     notifyListeners();
   }
 
@@ -62,13 +65,81 @@ class AddApplianceViewModel extends ChangeNotifier {
   }
 
   void onAddSegmentPressed() {
-    segments[segmentLabelController.text.capitalize!.trim()] = meters;
-    appliances[applianceNameController.text.trim()] = totalLength;
+    //totalLength=calculateTotalLength();
+    segments[segmentLabelController.text.trim()] =
+        stringToDouble_tryParse(lengthController.text)!;
     notifyListeners();
   }
 
   void removeSegment(String key) {
     segments.remove(key);
     notifyListeners();
+  }
+
+  void clearFields() {
+    // applianceNameController.text = '';
+    // elbowsController.text = '';
+    // bendsController.text = '';
+    // teesController.text = '';
+    // deviceFlued = '';
+
+    // totalDemandController.text = '';
+    segmentLabel = '';
+    segmentLabelController.text = '';
+    // tdUnit = '';
+    lineHpLp = '';
+    meters = 0;
+    lengthController.text = '';
+  }
+
+  clearAllFields() {
+    applianceNameController.text = '';
+    elbowsController.text = '';
+    bendsController.text = '';
+    teesController.text = '';
+    deviceFlued = '';
+
+    totalDemandController.text = '';
+    segmentLabel = '';
+    segmentLabelController.text = '';
+    tdUnit = '';
+    lineHpLp = '';
+    meters = 0;
+    lengthController.text = '';
+  }
+
+  Future<void> showValidationFailed() async {
+    await _dialogService.showDialog(
+        title: "Validation Failed",
+        description: "Please check values entered and try again ");
+  }
+
+  void saveApplianceAndAdd() {
+    totalLength = calculateTotalLength();
+    appliances[applianceNameController.text.trim()] = totalLength;
+    clearAllFields();
+    segments.clear();
+    //TODO:add to appmodel
+    notifyListeners();
+  }
+
+  double calculateTotalLength() {
+    double? elbows = stringToDouble_tryParse(elbowsController.text),
+        tees = stringToDouble_tryParse(teesController.text),
+        bends = stringToDouble_tryParse(bendsController.text);
+    double a = ((elbows! / tees!) * 0.8);
+    double b = bends! * 0.6;
+    double segmentLengths = 0;
+    segments.values.forEach((element) {
+      segmentLengths += element;
+    });
+    ;
+    print(segmentLengths);
+    print(" segmentlengths");
+    print(a);
+    print(" a");
+    print(b);
+    print("b");
+    return segmentLengths + a + b;
   }
 }

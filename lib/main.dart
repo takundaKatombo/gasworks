@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
       ),
       navigatorKey: StackedService.navigatorKey,
       onGenerateRoute: router.generateRoute,
-      initialRoute: routes.AddRoomsRoute,
+      initialRoute: routes.AddAppliancesRoute,
     );
   }
 }

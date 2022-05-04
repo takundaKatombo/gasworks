@@ -247,10 +247,16 @@ class AddRooms extends StatelessWidget {
                     child: ListView.builder(
                         itemCount: model.roomsList.roomsList.length,
                         itemBuilder: (BuildContext context, int index) {
-                          String key =
-                              model.roomsList.roomsList.keys.elementAt(index);
-                          double area =
-                              model.roomsList.roomsList.values.elementAt(index);
+                          String key = '';
+                          double area = 0.0;
+                          if (model.roomsList.roomsList.keys.elementAt(index) !=
+                              'N/A') {
+                            key =
+                                model.roomsList.roomsList.keys.elementAt(index);
+                            area = model.roomsList.roomsList.values
+                                .elementAt(index);
+                          }
+
                           return Container(
                             height: 50,
                             // width: width * 0.95,
@@ -303,6 +309,7 @@ class AddRooms extends StatelessWidget {
                             model.noRoom || model.roomsList.roomsList.isNotEmpty
                                 ? () {
                                     model.saveContinuePressed();
+                                    model.addNA();
                                   }
                                 : null,
                         child: Text("Save and Continue"),
