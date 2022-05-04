@@ -10,7 +10,6 @@ class AddAppliance extends StatelessWidget {
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
-   
 
     return ViewModelBuilder<AddApplianceViewModel>.reactive(
         viewModelBuilder: () => AddApplianceViewModel(),
@@ -73,7 +72,10 @@ class AddAppliance extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            Text('tees'),
+                            Tooltip(
+                              child: Text('tees'),
+                              message: 'tees in this line',
+                            ),
                             Container(
                               height: height * 0.08,
                               width: width * 0.3,
@@ -105,7 +107,9 @@ class AddAppliance extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Text('Elbows'),
+                          Tooltip(
+                              message: 'elbows in the line ',
+                              child: Text('Elbows')),
                           Container(
                             height: height * 0.08,
                             width: width * 0.2,
@@ -126,7 +130,9 @@ class AddAppliance extends StatelessWidget {
                               ),
                             ),
                           ),
-                          Text('Bends'),
+                          Tooltip(
+                              message: 'bends in the line ',
+                              child: Text('Bends')),
                           Container(
                             height: height * 0.08,
                             width: width * 0.2,
@@ -218,26 +224,30 @@ class AddAppliance extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             Text("Which room is Appliance in ?"),
-                            DropdownButton(
-                              items: model.roomsList.roomsList
-                                  .map((description, value) {
-                                    return MapEntry(
-                                        description,
-                                        DropdownMenuItem<String>(
-                                          value: description,
-                                          child: Text(description),
-                                        ));
-                                  })
-                                  .values
-                                  .toList(),
-                              value: model.roomName,
-                              onChanged: (String? newValue) {
-                                if (newValue != null) {
-                                  model.roomName = newValue;
-                                }
-                              },
-                              // validator: (value) =>
-                              //     value == null ? "Select a room" : null,
+                            Container(
+                              width: width * 0.4,
+                              height: height * 0.1,
+                              child: DropdownButtonFormField<String>(
+                                items: model.roomsList.roomsList
+                                    .map((description, value) {
+                                      return MapEntry(
+                                          description,
+                                          DropdownMenuItem<String>(
+                                            value: description,
+                                            child: Text(description),
+                                          ));
+                                    })
+                                    .values
+                                    .toList(),
+                                value: model.roomName,
+                                onChanged: (String? newValue) {
+                                  if (newValue != null) {
+                                    model.roomName = newValue;
+                                  }
+                                },
+                                validator: (value) =>
+                                    value == null ? "Select a room" : null,
+                              ),
                             )
                           ],
                         ),
