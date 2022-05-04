@@ -10,12 +10,7 @@ class AddAppliance extends StatelessWidget {
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
-    List<DropdownMenuItem<String>> menuItems = [
-      DropdownMenuItem(child: Text("NA"), value: "NA"),
-      DropdownMenuItem(child: Text("Kitchen"), value: "Kitchen"),
-      DropdownMenuItem(child: Text("Dining"), value: "Dining"),
-      DropdownMenuItem(child: Text("Lounge"), value: "Lounge"),
-    ];
+   
 
     return ViewModelBuilder<AddApplianceViewModel>.reactive(
         viewModelBuilder: () => AddApplianceViewModel(),

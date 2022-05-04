@@ -127,8 +127,9 @@ class AddApplianceViewModel extends ChangeNotifier {
     double? elbows = stringToDouble_tryParse(elbowsController.text),
         tees = stringToDouble_tryParse(teesController.text),
         bends = stringToDouble_tryParse(bendsController.text);
-    double a = ((elbows! / tees!) * 0.8);
+    double a = (elbows! * 0.8);
     double b = bends! * 0.6;
+    double c = tees! * 0.8;
     double segmentLengths = 0;
     segments.values.forEach((element) {
       segmentLengths += element;
@@ -140,6 +141,6 @@ class AddApplianceViewModel extends ChangeNotifier {
     print(" a");
     print(b);
     print("b");
-    return segmentLengths + a + b;
+    return segmentLengths + a + b + c;
   }
 }
