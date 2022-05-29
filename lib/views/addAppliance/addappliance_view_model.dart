@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:gasworks/constants/route_names.dart';
+import 'package:gasworks/models/appliance_model.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 import '../../locator.dart';
@@ -6,31 +8,20 @@ import '../../models/app_model.dart';
 
 class AddApplianceViewModel extends ChangeNotifier {
   final DialogService _dialogService = locator<DialogService>();
+  final NavigationService _navigationService = locator<NavigationService>();
   final roomsList = locator<AppModel>();
-
+  ApplianceModel thisAppliance = ApplianceModel();
   final GlobalKey<FormState> formKey = GlobalKey();
   final applianceNameController = TextEditingController();
   final teesController = TextEditingController();
   final elbowsController = TextEditingController();
   final bendsController = TextEditingController();
-  double totalDemand = 0;
-  Map<String, double> segments = {};
-  Map<String, double> appliances = {};
-  String deviceFlued = ''; //TODO:check if null
-  String segmentLabel = '';
-  double meters = 0;
-  String roomName = 'N/A';
+
   final totalDemandController = TextEditingController();
-
-  String tdUnit = '';
-
-  String lineHpLp = '';
 
   final segmentLabelController = TextEditingController();
 
-  double totalLength = 15.0;
-
-  final lengthController =
+  final metersController =
       TextEditingController(); //TODO:Calculate total Length
   bool isNumericUsingRegularExpression(String string) {
     print("in isnumeric");
@@ -50,29 +41,51 @@ class AddApplianceViewModel extends ChangeNotifier {
   }
 
   void tdUnitSet(String val) {
-    tdUnit = val;
+    thisAppliance.tdUnit = val;
     notifyListeners();
   }
 
   void deviceFluedSet(String val) {
-    deviceFlued = val;
+    thisAppliance.deviceFlued = val;
     notifyListeners();
   }
 
   void lineHpLpSet(String s) {
-    lineHpLp = s;
+    thisAppliance.lineHpLp = s;
     notifyListeners();
   }
 
-  void onAddSegmentPressed() {
+  Future<void> onAddSegmentPressed() async {
     //totalLength=calculateTotalLength();
-    segments[segmentLabelController.text.trim()] =
-        stringToDouble_tryParse(lengthController.text)!;
-    notifyListeners();
+
+    //   for (var element in roomsList.appliances.values) {
+    //     if (element.segments.containsKey(segmentLabelController.text.trim())) {
+    //       if (element.segments[segmentLabelController.text.trim()] == stringToDouble_tryParse(metersController.text.trim())) {
+    //       //print
+    //     } else {
+    //       }
+    //     } else {
+
+    //   }
+    // }
+
+    if (thisAppliance.segments.keys
+            .contains(segmentLabelController.text.trim().toUpperCase()) &&
+        thisAppliance.segments[segmentLabelController.text.trim()] ==
+            stringToDouble_tryParse(metersController.text.trim())) {
+      await _dialogService.showDialog(
+          title: 'Different Segment Lengths',
+          description:
+              'Another Segment With Different Length Exists. Please Check Segment Length');
+    } else {
+      thisAppliance.segments[segmentLabelController.text.trim()] =
+          stringToDouble_tryParse(metersController.text)!;
+      notifyListeners();
+    }
   }
 
   void removeSegment(String key) {
-    segments.remove(key);
+    thisAppliance.segments.remove(key);
     notifyListeners();
   }
 
@@ -84,28 +97,22 @@ class AddApplianceViewModel extends ChangeNotifier {
     // deviceFlued = '';
 
     // totalDemandController.text = '';
-    segmentLabel = '';
+    thisAppliance.segmentLabel = '';
     segmentLabelController.text = '';
     // tdUnit = '';
-    lineHpLp = '';
-    meters = 0;
-    lengthController.text = '';
+    thisAppliance.lineHpLp = '';
+    thisAppliance.meters = 0;
+    metersController.text = '';
   }
 
   clearAllFields() {
-    applianceNameController.text = '';
-    elbowsController.text = '';
-    bendsController.text = '';
-    teesController.text = '';
-    deviceFlued = '';
-
-    totalDemandController.text = '';
-    segmentLabel = '';
-    segmentLabelController.text = '';
-    tdUnit = '';
-    lineHpLp = '';
-    meters = 0;
-    lengthController.text = '';
+    // applianceNameController.text = '';
+    // elbowsController.text = '';
+    // bendsController.text = '';
+    // teesController.text = '';
+    // totalDemandController.text = '';
+    // segmentLabelController.text = '';
+    thisAppliance = ApplianceModel();
   }
 
   Future<void> showValidationFailed() async {
@@ -115,10 +122,10 @@ class AddApplianceViewModel extends ChangeNotifier {
   }
 
   void saveApplianceAndAdd() {
-    totalLength = calculateTotalLength();
-    appliances[applianceNameController.text.trim()] = totalLength;
+    thisAppliance.totalLength = calculateTotalLength();
+    roomsList.appliances[applianceNameController.text.trim()] = thisAppliance;
     clearAllFields();
-    segments.clear();
+    thisAppliance.segments.clear();
     //TODO:add to appmodel
     notifyListeners();
   }
@@ -131,7 +138,7 @@ class AddApplianceViewModel extends ChangeNotifier {
     double b = bends! * 0.6;
     double c = tees! * 0.8;
     double segmentLengths = 0;
-    segments.values.forEach((element) {
+    thisAppliance.segments.values.forEach((element) {
       segmentLengths += element;
     });
     ;
@@ -142,5 +149,9 @@ class AddApplianceViewModel extends ChangeNotifier {
     print(b);
     print("b");
     return segmentLengths + a + b + c;
+  }
+
+  void saveApplianceAndContinue() {
+    _navigationService.navigateTo(PipeSizingResultsRoute);
   }
 }

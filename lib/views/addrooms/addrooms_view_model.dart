@@ -86,14 +86,9 @@ class AddRoomsViewModel extends ChangeNotifier {
   }
 
   Future<void> checkAddRoom() async {
-    height = stringToDouble_tryParse(heightController.text.trim())!;
-    width = stringToDouble_tryParse(widthController.text.trim())!;
-    length = stringToDouble_tryParse(lengthController.text.trim())!;
-
     if (height != 0 && width != 0 && length != 0) {
       area = height * width * length;
       showAddroom = true;
-      notifyListeners();
     } else {
       await _dialogService.showDialog(
           title: "Validation Failed",

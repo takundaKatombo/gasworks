@@ -62,8 +62,9 @@ class AddAppliance extends StatelessWidget {
                                     if (model
                                         .applianceNameController.text.isEmpty) {
                                       return 'cannot be empty';
-                                    } else if (model.appliances.containsKey(
-                                        model.applianceNameController.text)) {
+                                    } else if (model.roomsList.appliances
+                                        .containsKey(model
+                                            .applianceNameController.text)) {
                                       return 'cannot have duplicate values ';
                                     } else {
                                       return null;
@@ -202,14 +203,14 @@ class AddAppliance extends StatelessWidget {
                             ),
                             Radio(
                                 value: "kg",
-                                groupValue: model.tdUnit,
+                                groupValue: model.thisAppliance.tdUnit,
                                 onChanged: (String? val) {
                                   model.tdUnitSet(val!);
                                 }),
                             Text("kg/h"),
                             Radio(
                                 value: 'mu',
-                                groupValue: model.tdUnit,
+                                groupValue: model.thisAppliance.tdUnit,
                                 onChanged: (String? val) {
                                   model.tdUnitSet(val!);
                                 }),
@@ -239,10 +240,10 @@ class AddAppliance extends StatelessWidget {
                                     })
                                     .values
                                     .toList(),
-                                value: model.roomName,
+                                value: model.thisAppliance.roomName,
                                 onChanged: (String? newValue) {
                                   if (newValue != null) {
-                                    model.roomName = newValue;
+                                    model.thisAppliance.roomName = newValue;
                                   }
                                 },
                                 validator: (value) =>
@@ -263,14 +264,14 @@ class AddAppliance extends StatelessWidget {
                             ),
                             Radio(
                                 value: 'true',
-                                groupValue: model.deviceFlued,
+                                groupValue: model.thisAppliance.deviceFlued,
                                 onChanged: (String? val) {
                                   model.deviceFluedSet(val!);
                                 }),
                             Text("Yes"),
                             Radio(
                                 value: 'false',
-                                groupValue: model.deviceFlued,
+                                groupValue: model.thisAppliance.deviceFlued,
                                 onChanged: (String? val) {
                                   model.deviceFluedSet(val!);
                                 }),
@@ -330,7 +331,7 @@ class AddAppliance extends StatelessWidget {
                               width: width * 0.2,
                               child: Center(
                                 child: TextFormField(
-                                  controller: model.lengthController,
+                                  controller: model.metersController,
                                   keyboardType: TextInputType.number,
                                   validator: (val) {
                                     if (model.isNumericUsingRegularExpression(
@@ -354,14 +355,14 @@ class AddAppliance extends StatelessWidget {
                             Text("Line Part of HP or LP run"),
                             Radio(
                                 value: 'hp',
-                                groupValue: model.lineHpLp,
+                                groupValue: model.thisAppliance.lineHpLp,
                                 onChanged: (String? val) {
                                   model.lineHpLpSet(val!);
                                 }),
                             Text("HP"),
                             Radio(
                                 value: 'lp',
-                                groupValue: model.lineHpLp,
+                                groupValue: model.thisAppliance.lineHpLp,
                                 onChanged: (String? val) {
                                   model.lineHpLpSet(val!);
                                 }),
@@ -378,12 +379,14 @@ class AddAppliance extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             ElevatedButton(
-                                onPressed: () {
+                                onPressed: () async {
                                   if (model.formKey.currentState!.validate() &&
-                                      model.lineHpLp.isNotEmpty &&
-                                      model.deviceFlued.isNotEmpty &&
-                                      model.lineHpLp.isNotEmpty) {
-                                    model.onAddSegmentPressed();
+                                      model.thisAppliance.lineHpLp.isNotEmpty &&
+                                      model.thisAppliance.deviceFlued
+                                          .isNotEmpty &&
+                                      model.thisAppliance.lineHpLp.isNotEmpty) {
+                                    await model.onAddSegmentPressed();
+                                    model.formKey.currentState!.reset();
                                     model.clearFields();
                                   } else {
                                     model.showValidationFailed();
@@ -447,52 +450,47 @@ class AddAppliance extends StatelessWidget {
                       Container(
                         height: height * 0.25,
                         child: ListView.builder(
-                            itemCount: model.segments.length,
+                            itemCount: model.thisAppliance.segments.length,
                             itemBuilder: (BuildContext context, int index) {
-                              String key = model.segments.keys.elementAt(index);
-                              String area = model.segments.values
+                              String key = model.thisAppliance.segments.keys
+                                  .elementAt(index);
+                              String area = model.thisAppliance.segments.values
                                   .elementAt(index)
                                   .toString();
-                              return Container(
-                                height: 50,
-                                // width: width * 0.95,
-                                // margin: EdgeInsets.all(2),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        border: Border.all(),
-                                      ),
-                                      height: height * 0.06,
-                                      width: width * 0.3,
-                                      child: Center(child: Text(key)),
+                              return Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      border: Border.all(),
                                     ),
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        border: Border.all(),
-                                      ),
-                                      height: height * 0.06,
-                                      width: width * 0.3,
-                                      child:
-                                          Center(child: Text(area.toString())),
+                                    height: height * 0.06,
+                                    width: width * 0.3,
+                                    child: Center(child: Text(key)),
+                                  ),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      border: Border.all(),
                                     ),
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        border: Border.all(),
-                                      ),
-                                      height: height * 0.06,
-                                      width: width * 0.3,
-                                      child: Center(
-                                        child: ElevatedButton(
-                                            onPressed: () {
-                                              model.removeSegment(key);
-                                            },
-                                            child: Text('Delete')),
-                                      ),
+                                    height: height * 0.06,
+                                    width: width * 0.3,
+                                    child: Center(child: Text(area.toString())),
+                                  ),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      border: Border.all(),
                                     ),
-                                  ],
-                                ),
+                                    height: height * 0.06,
+                                    width: width * 0.3,
+                                    child: Center(
+                                      child: ElevatedButton(
+                                          onPressed: () {
+                                            model.removeSegment(key);
+                                          },
+                                          child: Text('Delete')),
+                                    ),
+                                  ),
+                                ],
                               ); //todo:Pass map key as key for item deletion
                             }),
                       ),
@@ -510,7 +508,9 @@ class AddAppliance extends StatelessWidget {
                                 },
                                 child: Text('Save and Add Another ')),
                             ElevatedButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  model.saveApplianceAndContinue();
+                                },
                                 child: Text('Save and Continue'))
                           ],
                         ),

@@ -74,7 +74,9 @@ class AddRooms extends StatelessWidget {
                                   decoration: new InputDecoration.collapsed(
                                       hintText: 'Room Name'),
                                   validator: (val) {
-                                    if (model.roomNameController.text != null) {
+                                    if (model
+                                        .roomNameController.text.isNotEmpty) {
+                                      model.roomName = val;
                                       return null;
                                     } else {
                                       return 'cannot be empty';
@@ -97,13 +99,20 @@ class AddRooms extends StatelessWidget {
                                   decoration: new InputDecoration.collapsed(
                                       hintText: 'Length'),
                                   validator: (val) {
-                                    if (model.isNumericUsingRegularExpression(
-                                        val!)) {
-                                      return null;
-                                    } else {
-                                      return 'can only be numeric';
+                                    if (model
+                                        .lengthController.text.isNotEmpty) {
+                                      if (model.isNumericUsingRegularExpression(
+                                          val!)) {
+                                        model.length =
+                                            model.stringToDouble_tryParse(val)!;
+                                        return null;
+                                      } else {
+                                        return 'can only be numeric';
 
-                                      // return 'Length can only be a number';
+                                        // return 'Length can only be a number';
+                                      }
+                                    } else {
+                                      return null;
                                     }
                                   },
                                 ),
@@ -130,13 +139,19 @@ class AddRooms extends StatelessWidget {
                                 decoration: new InputDecoration.collapsed(
                                     hintText: 'Width'),
                                 validator: (val) {
-                                  if (model
-                                      .isNumericUsingRegularExpression(val!)) {
-                                    return null;
-                                  } else {
-                                    return 'can only be numeric';
+                                  if (model.widthController.text.isNotEmpty) {
+                                    if (model.isNumericUsingRegularExpression(
+                                        val!)) {
+                                      model.width =
+                                          model.stringToDouble_tryParse(val)!;
+                                      return null;
+                                    } else {
+                                      return 'can only be numeric';
 
-                                    // return 'Width can only be a number ';
+                                      // return 'Width can only be a number ';
+                                    }
+                                  } else {
+                                    return null;
                                   }
                                 },
                               ),
@@ -156,12 +171,19 @@ class AddRooms extends StatelessWidget {
                                 decoration: new InputDecoration.collapsed(
                                     hintText: 'Height'),
                                 validator: (val) {
-                                  if (model
-                                      .isNumericUsingRegularExpression(val!)) {
-                                    return null;
+                                  if (model.heightController.text.isNotEmpty) {
+                                    if (model.isNumericUsingRegularExpression(
+                                        val!)) {
+                                      model.height =
+                                          model.stringToDouble_tryParse(val)!;
+                                      model.checkAddRoom();
+                                      return null;
+                                    } else {
+                                      return 'can only be numeric';
+                                      // return 'Height can only be a number ';
+                                    }
                                   } else {
-                                    return 'can only be numeric';
-                                    // return 'Height can only be a number ';
+                                    return null;
                                   }
                                 },
                               ),
@@ -181,7 +203,6 @@ class AddRooms extends StatelessWidget {
                       ElevatedButton(
                           onPressed: () {
                             if (model.formKey.currentState!.validate()) {
-                              model.checkAddRoom();
                               model.addToRoomList();
                             } else {
                               model.showFailedValidation();
