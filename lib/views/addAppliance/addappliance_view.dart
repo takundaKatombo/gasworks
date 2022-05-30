@@ -386,7 +386,6 @@ class AddAppliance extends StatelessWidget {
                                           .isNotEmpty &&
                                       model.thisAppliance.lineHpLp.isNotEmpty) {
                                     await model.onAddSegmentPressed();
-                                    model.formKey.currentState!.reset();
                                     model.clearFields();
                                   } else {
                                     model.showValidationFailed();

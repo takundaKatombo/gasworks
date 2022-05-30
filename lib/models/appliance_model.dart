@@ -1,5 +1,4 @@
 class ApplianceModel {
-  double totalDemand = 0;
   Map<String, double> segments = {};
   String deviceFlued = ''; //TODO:check if null
   String segmentLabel = '';
@@ -7,6 +6,7 @@ class ApplianceModel {
   String roomName = 'N/A';
   String tdUnit = '';
   double totalLength = 15.0;
-
+  double tdMu = 0;
+  double tdKG = 0;
   String lineHpLp = '';
 }

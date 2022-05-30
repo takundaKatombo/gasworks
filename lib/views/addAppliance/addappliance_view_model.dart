@@ -42,6 +42,7 @@ class AddApplianceViewModel extends ChangeNotifier {
 
   void tdUnitSet(String val) {
     thisAppliance.tdUnit = val;
+    // thisAppliance.td
     notifyListeners();
   }
 
@@ -58,30 +59,34 @@ class AddApplianceViewModel extends ChangeNotifier {
   Future<void> onAddSegmentPressed() async {
     //totalLength=calculateTotalLength();
 
-    //   for (var element in roomsList.appliances.values) {
-    //     if (element.segments.containsKey(segmentLabelController.text.trim())) {
-    //       if (element.segments[segmentLabelController.text.trim()] == stringToDouble_tryParse(metersController.text.trim())) {
-    //       //print
-    //     } else {
-    //       }
-    //     } else {
-
-    //   }
-    // }
-
-    if (thisAppliance.segments.keys
-            .contains(segmentLabelController.text.trim().toUpperCase()) &&
-        thisAppliance.segments[segmentLabelController.text.trim()] ==
-            stringToDouble_tryParse(metersController.text.trim())) {
-      await _dialogService.showDialog(
-          title: 'Different Segment Lengths',
-          description:
-              'Another Segment With Different Length Exists. Please Check Segment Length');
-    } else {
-      thisAppliance.segments[segmentLabelController.text.trim()] =
-          stringToDouble_tryParse(metersController.text)!;
-      notifyListeners();
+    for (var element in roomsList.appliances.values) {
+      var segmentValidate = element.segments.keys.where((element) =>
+          element == segmentLabelController.text.trim().toUpperCase());
+      if (segmentValidate.isNotEmpty) {
+        var response = await _dialogService.showConfirmationDialog(
+            title: 'Different Segment Lengths',
+            description:
+                'Another Segment With Different Length Exists. Do you want to change the length ?');
+        if (response!.confirmed) {
+          thisAppliance.segments[segmentLabelController.text.trim()] =
+              stringToDouble_tryParse(metersController.text)!;
+          notifyListeners();
+        }
+      } else {
+        thisAppliance.segments[segmentLabelController.text.trim()] =
+            stringToDouble_tryParse(metersController.text)!;
+        notifyListeners();
+      }
     }
+
+    // if (thisAppliance.segments.keys
+    //         .contains()) &&
+    //     (thisAppliance.segments[segmentLabelController.text.trim()] ==
+    //         stringToDouble_tryParse(metersController.text.trim()))) {
+
+    // } else {
+
+    // }
   }
 
   void removeSegment(String key) {
@@ -138,10 +143,10 @@ class AddApplianceViewModel extends ChangeNotifier {
     double b = bends! * 0.6;
     double c = tees! * 0.8;
     double segmentLengths = 0;
-    thisAppliance.segments.values.forEach((element) {
+    for (var element in thisAppliance.segments.values) {
       segmentLengths += element;
-    });
-    ;
+    }
+
     print(segmentLengths);
     print(" segmentlengths");
     print(a);
