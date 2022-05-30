@@ -59,24 +59,33 @@ class AddApplianceViewModel extends ChangeNotifier {
   Future<void> onAddSegmentPressed() async {
     //totalLength=calculateTotalLength();
 
-    for (var element in roomsList.appliances.values) {
-      var segmentValidate = element.segments.keys.where((element) =>
-          element == segmentLabelController.text.trim().toUpperCase());
-      if (segmentValidate.isNotEmpty) {
-        var response = await _dialogService.showConfirmationDialog(
-            title: 'Different Segment Lengths',
-            description:
-                'Another Segment With Different Length Exists. Do you want to change the length ?');
-        if (response!.confirmed) {
-          thisAppliance.segments[segmentLabelController.text.trim()] =
-              stringToDouble_tryParse(metersController.text)!;
-          notifyListeners();
-        }
-      } else {
+    //   for (var element in roomsList.appliances.values) {
+    //     if (element.segments.containsKey(segmentLabelController.text.trim())) {
+    //       if (element.segments[segmentLabelController.text.trim()] == stringToDouble_tryParse(metersController.text.trim())) {
+    //       //print
+    //     } else {
+    //       }
+    //     } else {
+
+    //   }
+    // }
+
+    var segmentValidate = thisAppliance.segments.keys.where((element) =>
+        element == segmentLabelController.text.trim().toUpperCase());
+    if (segmentValidate.isNotEmpty) {
+      var response = await _dialogService.showConfirmationDialog(
+          title: 'Different Segment Lengths',
+          description:
+              'Another Segment With Different Length Exists. Do you want to change the length ?');
+      if (response!.confirmed) {
         thisAppliance.segments[segmentLabelController.text.trim()] =
             stringToDouble_tryParse(metersController.text)!;
         notifyListeners();
       }
+    } else {
+      thisAppliance.segments[segmentLabelController.text.trim()] =
+          stringToDouble_tryParse(metersController.text)!;
+      notifyListeners();
     }
 
     // if (thisAppliance.segments.keys
