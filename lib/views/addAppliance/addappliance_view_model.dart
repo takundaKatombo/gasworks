@@ -42,6 +42,13 @@ class AddApplianceViewModel extends ChangeNotifier {
 
   void tdUnitSet(String val) {
     thisAppliance.tdUnit = val;
+    if (val == 'kg') {
+      thisAppliance.tdKG = stringToDouble_tryParse(totalDemandController.text)!;
+      thisAppliance.tdMu = thisAppliance.tdKG * 50;
+    } else {
+      thisAppliance.tdMu = stringToDouble_tryParse(totalDemandController.text)!;
+      thisAppliance.tdKG = thisAppliance.tdMu / 50;
+    }
     // thisAppliance.td
     notifyListeners();
   }
@@ -69,14 +76,13 @@ class AddApplianceViewModel extends ChangeNotifier {
 
     //   }
     // }
-
-    var segmentValidate = thisAppliance.segments.keys.where((element) =>
-        element == segmentLabelController.text.trim().toUpperCase());
+    var segmentValidate = roomsList.appliances.values.where((element) =>
+        element.segments.containsKey(segmentLabelController.text.trim()));
     if (segmentValidate.isNotEmpty) {
       var response = await _dialogService.showConfirmationDialog(
-          title: 'Different Segment Lengths',
+          title: 'Segment Exits',
           description:
-              'Another Segment With Different Length Exists. Do you want to change the length ?');
+              'Another Segment With Same Name Exists. Do you want to change the length ?');
       if (response!.confirmed) {
         thisAppliance.segments[segmentLabelController.text.trim()] =
             stringToDouble_tryParse(metersController.text)!;
@@ -120,12 +126,12 @@ class AddApplianceViewModel extends ChangeNotifier {
   }
 
   clearAllFields() {
-    // applianceNameController.text = '';
-    // elbowsController.text = '';
-    // bendsController.text = '';
-    // teesController.text = '';
-    // totalDemandController.text = '';
-    // segmentLabelController.text = '';
+    applianceNameController.text = '';
+    elbowsController.text = '';
+    bendsController.text = '';
+    teesController.text = '';
+    totalDemandController.text = '';
+    segmentLabelController.text = '';
     thisAppliance = ApplianceModel();
   }
 
