@@ -76,24 +76,6 @@ class AddApplianceViewModel extends ChangeNotifier {
 
     //   }
     // }
-    var segmentValidate = roomsList.appliances.values.where((element) =>
-        element.segments.containsKey(segmentLabelController.text.trim()));
-    if (segmentValidate.isNotEmpty) {
-      var response = await _dialogService.showConfirmationDialog(
-          title: 'Segment Exits',
-          description:
-              'Another Segment With Same Name Exists. Do you want to change the length ?');
-      if (response!.confirmed) {
-        thisAppliance.segments[segmentLabelController.text.trim()] =
-            stringToDouble_tryParse(metersController.text)!;
-        notifyListeners();
-      }
-    } else {
-      thisAppliance.segments[segmentLabelController.text.trim()] =
-          stringToDouble_tryParse(metersController.text)!;
-      notifyListeners();
-    }
-
     // if (thisAppliance.segments.keys
     //         .contains()) &&
     //     (thisAppliance.segments[segmentLabelController.text.trim()] ==
@@ -102,6 +84,23 @@ class AddApplianceViewModel extends ChangeNotifier {
     // } else {
 
     // }
+    Iterable<MapEntry<String, double>> diffLengths = [];
+    var segmentValidate = roomsList.appliances.values.where((element) =>
+        element.segments.containsKey(segmentLabelController.text.trim()));
+    for (var element in segmentValidate) {
+      diffLengths = element.segments.entries.where((element) =>
+          element.value != stringToDouble_tryParse(metersController.text)!);
+    }
+    if (diffLengths.isNotEmpty) {
+      await _dialogService.showDialog(
+          title: 'Segment Exits',
+          description:
+              'Another Segment With Same Name And Different Length Exists');
+    } else {
+      thisAppliance.segments[segmentLabelController.text.trim()] =
+          stringToDouble_tryParse(metersController.text)!;
+      notifyListeners();
+    }
   }
 
   void removeSegment(String key) {
