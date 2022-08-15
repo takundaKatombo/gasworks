@@ -503,12 +503,41 @@ class AddAppliance extends StatelessWidget {
                           children: [
                             ElevatedButton(
                                 onPressed: () {
-                                  model.saveApplianceAndAdd();
+                                  if (model.thisAppliance.segments.isNotEmpty &&
+                                      model.applianceNameController.text
+                                          .isNotEmpty &&
+                                      model.teesController.text.isNotEmpty &&
+                                      model.elbowsController.text.isNotEmpty &&
+                                      model.bendsController.text.isNotEmpty &&
+                                      model.totalDemandController.text
+                                          .isNotEmpty &&
+                                      model.thisAppliance.tdUnit.isNotEmpty &&
+                                      model.thisAppliance.deviceFlued
+                                          .isNotEmpty) {
+                                    model.saveApplianceAndAdd();
+                                  } else {
+                                    model.showValidationFailed();
+                                  }
                                 },
                                 child: Text('Save and Add Another ')),
                             ElevatedButton(
                                 onPressed: () {
-                                  model.saveApplianceAndContinue();
+                                  if (model.thisAppliance.segments.isNotEmpty &&
+                                      model.applianceNameController.text
+                                          .isNotEmpty &&
+                                      model.teesController.text.isNotEmpty &&
+                                      model.elbowsController.text.isNotEmpty &&
+                                      model.bendsController.text.isNotEmpty &&
+                                      model.totalDemandController.text
+                                          .isNotEmpty &&
+                                      model.thisAppliance.tdUnit.isNotEmpty &&
+                                      model.thisAppliance.deviceFlued
+                                          .isNotEmpty) {
+                                    //TODO:check if individual fields are empty no form validation and the segments if the are not empty
+                                    model.saveApplianceAndContinue();
+                                  } else {
+                                    model.showValidationFailed();
+                                  }
                                 },
                                 child: Text('Save and Continue'))
                           ],
