@@ -21,8 +21,9 @@ class AddApplianceViewModel extends ChangeNotifier {
 
   final segmentLabelController = TextEditingController();
 
-  final metersController =
-      TextEditingController(); //TODO:Calculate total Length
+  final metersController = TextEditingController();
+
+  String lineHpLp = ''; //TODO:Calculate total Length
   bool isNumericUsingRegularExpression(String string) {
     print("in isnumeric");
     final numericRegex = RegExp(r'^-?(([0-9]*)|(([0-9]*)\.([0-9]*)))$');
@@ -59,7 +60,7 @@ class AddApplianceViewModel extends ChangeNotifier {
   }
 
   void lineHpLpSet(String s) {
-    thisAppliance.lineHpLp = s;
+    lineHpLp = s;
     notifyListeners();
   }
 
@@ -84,21 +85,28 @@ class AddApplianceViewModel extends ChangeNotifier {
     // } else {
 
     // }
-    Iterable<MapEntry<String, double>> diffLengths = [];
+    Iterable<MapEntry<String, Segment>> diffLengths = [];
     var segmentValidate = roomsList.appliances.values.where((element) =>
         element.segments.containsKey(segmentLabelController.text.trim()));
+    print('seg valiudate' + segmentValidate.toString());
     for (var element in segmentValidate) {
       diffLengths = element.segments.entries.where((element) =>
-          element.value != stringToDouble_tryParse(metersController.text)!);
+          element.value.segmentMeters !=
+          stringToDouble_tryParse(metersController.text.trim())!);
     }
+    print('diff lenghts' + diffLengths.toString());
     if (diffLengths.isNotEmpty) {
       await _dialogService.showDialog(
           title: 'Segment Exits',
           description:
-              'Another Segment With Same Name And Different Length Exists');
+              'Another Segment With Same Name, On the Same Run And with Different Length Exists');
     } else {
       thisAppliance.segments[segmentLabelController.text.trim()] =
-          stringToDouble_tryParse(metersController.text)!;
+          Segment(0, lineHpLp);
+      thisAppliance.segments[segmentLabelController.text.trim()]!
+          .segmentMeters = stringToDouble_tryParse(metersController.text)!;
+      thisAppliance.segments[segmentLabelController.text.trim()]!.lineHpLp =
+          lineHpLp;
       notifyListeners();
     }
   }
@@ -119,8 +127,7 @@ class AddApplianceViewModel extends ChangeNotifier {
     thisAppliance.segmentLabel = '';
     segmentLabelController.text = '';
     // tdUnit = '';
-    thisAppliance.lineHpLp = '';
-    thisAppliance.meters = 0;
+    lineHpLp = '';
     metersController.text = '';
   }
 
@@ -158,7 +165,7 @@ class AddApplianceViewModel extends ChangeNotifier {
     double c = tees! * 0.8;
     double segmentLengths = 0;
     for (var element in thisAppliance.segments.values) {
-      segmentLengths += element;
+      segmentLengths += element.segmentMeters;
     }
 
     print(segmentLengths);
@@ -171,6 +178,15 @@ class AddApplianceViewModel extends ChangeNotifier {
   }
 
   void saveApplianceAndContinue() {
+    thisAppliance.totalLength = calculateTotalLength();
+    double tempHp = roomsList.appliances.values.first.totalLength;
+    double tempLp = roomsList.appliances.values.first.totalLength;
+
+    roomsList.appliances[applianceNameController.text.trim()] = thisAppliance;
+    roomsList.appliances.forEach((key, value) {
+      tempHp = tempHp > value.totalLength ? tempHp : value.totalLength;
+      tempLp = tempLp > value.totalLength ? tempLp : value.totalLength;
+    });
     _navigationService.navigateTo(PipeSizingResultsRoute);
   }
 }
