@@ -258,7 +258,8 @@ class PipeSizingResults extends StatelessWidget {
                                 height: height * 0.06,
                                 width: width * 0.2,
                                 child: Center(
-                                  child: Text(''),
+                                  child: Text(
+                                      "model.getTDTableRefLp(model.lp[index].values.toString())"),
                                 ),
                               ),
                               Container(

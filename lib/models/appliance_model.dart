@@ -7,6 +7,9 @@ class ApplianceModel {
   double totalLength = 15.0;
   double tdMu = 0;
   double tdKG = 0;
+  double totalLp = 0;
+  double totalHp = 0;
+  
 }
 
 class Segment {
