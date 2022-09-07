@@ -355,14 +355,14 @@ class AddAppliance extends StatelessWidget {
                             Text("Line Part of HP or LP run"),
                             Radio(
                                 value: 'hp',
-                                groupValue: model.thisAppliance.lineHpLp,
+                                groupValue: model.lineHpLp,
                                 onChanged: (String? val) {
                                   model.lineHpLpSet(val!);
                                 }),
                             Text("HP"),
                             Radio(
                                 value: 'lp',
-                                groupValue: model.thisAppliance.lineHpLp,
+                                groupValue: model.lineHpLp,
                                 onChanged: (String? val) {
                                   model.lineHpLpSet(val!);
                                 }),
@@ -381,10 +381,10 @@ class AddAppliance extends StatelessWidget {
                             ElevatedButton(
                                 onPressed: () async {
                                   if (model.formKey.currentState!.validate() &&
-                                      model.thisAppliance.lineHpLp.isNotEmpty &&
+                                      model.lineHpLp.isNotEmpty &&
                                       model.thisAppliance.deviceFlued
                                           .isNotEmpty &&
-                                      model.thisAppliance.lineHpLp.isNotEmpty) {
+                                      model.lineHpLp.isNotEmpty) {
                                     await model.onAddSegmentPressed();
                                     model.clearFields();
                                   } else {
@@ -453,8 +453,10 @@ class AddAppliance extends StatelessWidget {
                             itemBuilder: (BuildContext context, int index) {
                               String key = model.thisAppliance.segments.keys
                                   .elementAt(index);
-                              String area = model.thisAppliance.segments.values
+                              String meters = model
+                                  .thisAppliance.segments.values
                                   .elementAt(index)
+                                  .segmentMeters
                                   .toString();
                               return Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -473,7 +475,7 @@ class AddAppliance extends StatelessWidget {
                                     ),
                                     height: height * 0.06,
                                     width: width * 0.3,
-                                    child: Center(child: Text(area.toString())),
+                                    child: Center(child: Text(meters)),
                                   ),
                                   Container(
                                     decoration: BoxDecoration(
