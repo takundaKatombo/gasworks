@@ -23,7 +23,7 @@ class AddApplianceViewModel extends ChangeNotifier {
 
   final metersController = TextEditingController();
 
-  String lineHpLp = ''; //TODO:Calculate total Length
+  String lineHpLp = '';
   bool isNumericUsingRegularExpression(String string) {
     print("in isnumeric");
     final numericRegex = RegExp(r'^-?(([0-9]*)|(([0-9]*)\.([0-9]*)))$');
@@ -31,9 +31,11 @@ class AddApplianceViewModel extends ChangeNotifier {
     return numericRegex.hasMatch(string);
   }
 
-  double? stringToDouble_tryParse(String input) {
+  double stringToDouble_tryParse(String input) {
     print('in stringtodouble');
-    return double.tryParse(input);
+    double fromString = 0;
+    fromString = double.tryParse(input)!;
+    return fromString;
   }
 
   Future<void> showRules() async {
@@ -44,10 +46,10 @@ class AddApplianceViewModel extends ChangeNotifier {
   void tdUnitSet(String val) {
     thisAppliance.tdUnit = val;
     if (val == 'kg') {
-      thisAppliance.tdKG = stringToDouble_tryParse(totalDemandController.text)!;
+      thisAppliance.tdKG = stringToDouble_tryParse(totalDemandController.text);
       thisAppliance.tdMu = thisAppliance.tdKG * 50;
     } else {
-      thisAppliance.tdMu = stringToDouble_tryParse(totalDemandController.text)!;
+      thisAppliance.tdMu = stringToDouble_tryParse(totalDemandController.text);
       thisAppliance.tdKG = thisAppliance.tdMu / 50;
     }
     // thisAppliance.td
@@ -92,7 +94,7 @@ class AddApplianceViewModel extends ChangeNotifier {
     for (var element in segmentValidate) {
       diffLengths = element.segments.entries.where((element) =>
           element.value.segmentMeters !=
-          stringToDouble_tryParse(metersController.text.trim())!);
+          stringToDouble_tryParse(metersController.text.trim()));
     }
     print('diff lenghts' + diffLengths.toString());
     if (diffLengths.isNotEmpty) {
@@ -104,9 +106,14 @@ class AddApplianceViewModel extends ChangeNotifier {
       thisAppliance.segments[segmentLabelController.text.trim()] =
           Segment(0, lineHpLp);
       thisAppliance.segments[segmentLabelController.text.trim()]!
-          .segmentMeters = stringToDouble_tryParse(metersController.text)!;
+          .segmentMeters = stringToDouble_tryParse(metersController.text);
       thisAppliance.segments[segmentLabelController.text.trim()]!.lineHpLp =
           lineHpLp;
+      if (lineHpLp == "hp") {
+        thisAppliance.totalHp += stringToDouble_tryParse(metersController.text);
+      } else {
+        thisAppliance.totalLp += stringToDouble_tryParse(metersController.text);
+      }
       notifyListeners();
     }
   }
@@ -128,6 +135,7 @@ class AddApplianceViewModel extends ChangeNotifier {
     segmentLabelController.text = '';
     // tdUnit = '';
     lineHpLp = '';
+    thisAppliance.meters = 0;
     metersController.text = '';
   }
 
@@ -157,12 +165,12 @@ class AddApplianceViewModel extends ChangeNotifier {
   }
 
   double calculateTotalLength() {
-    double? elbows = stringToDouble_tryParse(elbowsController.text),
+    double elbows = stringToDouble_tryParse(elbowsController.text),
         tees = stringToDouble_tryParse(teesController.text),
         bends = stringToDouble_tryParse(bendsController.text);
-    double a = (elbows! * 0.8);
-    double b = bends! * 0.6;
-    double c = tees! * 0.8;
+    double a = (elbows * 0.8);
+    double b = bends * 0.6;
+    double c = tees * 0.8;
     double segmentLengths = 0;
     for (var element in thisAppliance.segments.values) {
       segmentLengths += element.segmentMeters;
@@ -179,14 +187,17 @@ class AddApplianceViewModel extends ChangeNotifier {
 
   void saveApplianceAndContinue() {
     thisAppliance.totalLength = calculateTotalLength();
-    double tempHp = roomsList.appliances.values.first.totalLength;
-    double tempLp = roomsList.appliances.values.first.totalLength;
+    ApplianceModel tempHp;
+    ApplianceModel tempLp;
 
     roomsList.appliances[applianceNameController.text.trim()] = thisAppliance;
-    roomsList.appliances.forEach((key, value) {
-      tempHp = tempHp > value.totalLength ? tempHp : value.totalLength;
-      tempLp = tempLp > value.totalLength ? tempLp : value.totalLength;
-    });
+    var appList = roomsList.appliances.values.toList();
+    tempHp = appList.reduce(
+        (current, next) => current.totalHp > next.totalHp ? current : next);
+    tempLp = appList.reduce(
+        (current, next) => current.totalLp > next.totalLp ? current : next);
+    roomsList.longestDistanceHp = tempHp;
+    roomsList.longestDistanceLp = tempLp;
     _navigationService.navigateTo(PipeSizingResultsRoute);
   }
 }
