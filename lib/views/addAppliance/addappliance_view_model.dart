@@ -1,8 +1,10 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:gasworks/constants/route_names.dart';
 import 'package:gasworks/models/appliance_model.dart';
 import 'package:stacked_services/stacked_services.dart';
-
+import "dart:math";
 import '../../locator.dart';
 import '../../models/app_model.dart';
 
