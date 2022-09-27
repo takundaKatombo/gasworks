@@ -87,7 +87,8 @@ class AddApplianceViewModel extends ChangeNotifier {
     // } else {
 
     // }
-    Iterable<MapEntry<String, Segment>> diffLengths = [];
+    Iterable<MapEntry<String, Segment>> diffLengths =
+        []; //Todo: loop through list with for to check if any appliance has same segment .... similar to loop for checking duplicates
     var segmentValidate = roomsList.appliances.values.where((element) =>
         element.segments.containsKey(segmentLabelController.text.trim()));
     print('seg valiudate' + segmentValidate.toString());

@@ -12,6 +12,7 @@ class PipeSizingResultsViewModel extends ChangeNotifier {
   List<Map<String, Segment>> hp = [];
   // List<dynamic> hpCsv = [];
   List<Map<String, Segment>> reducedLP = [];
+  List<Map<String, Segment>> reducedHP = [];
 
   Future<void> getLpHpLists() async {
     print("in getHpLp Lists");
@@ -32,8 +33,26 @@ class PipeSizingResultsViewModel extends ChangeNotifier {
       });
     }
     print(lp);
+    for (var elementHP in hp) {
+      String key = '';
+      double td = 0;
+      int index = -2;
+      for (var element in elementHP.values) {
+        td = element.tdMu;
+      }
+      for (var element in elementHP.keys) {
+        key = element;
+      }
+      index = reducedHP.indexWhere((element) => element.keys.contains(key));
+      if (index >= 0) {
+        for (var element in reducedHP[index].values) {
+          element.tdMu += td;
+        }
+      } else {
+        reducedHP.add(elementHP);
+      }
+    }
     for (var elementLP in lp) {
-      print('for in lp');
       String key = '';
       double td = 0;
       int index = -2;
@@ -43,7 +62,6 @@ class PipeSizingResultsViewModel extends ChangeNotifier {
       for (var element in elementLP.keys) {
         key = element;
       }
-      print(key);
       index = reducedLP.indexWhere((element) => element.keys.contains(key));
       if (index >= 0) {
         for (var element in reducedLP[index].values) {
@@ -52,7 +70,6 @@ class PipeSizingResultsViewModel extends ChangeNotifier {
       } else {
         reducedLP.add(elementLP);
       }
-      print(reducedLP);
 //       for (var element in reducedLP[index].values) {             element.tdMu += td;
 // }
 //       for (var elementRLP in reducedLP) {
