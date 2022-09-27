@@ -221,7 +221,7 @@ class PipeSizingResults extends StatelessWidget {
                 Container(
                   height: height * 0.25,
                   child: ListView.builder(
-                      itemCount: model.lp.length,
+                      itemCount: model.reducedLP.length,
                       itemBuilder: (BuildContext context, int index) {
                         //
                         return Container(
@@ -268,7 +268,7 @@ class PipeSizingResults extends StatelessWidget {
                                 height: height * 0.06,
                                 width: width * 0.2,
                                 child: Center(
-                                  child: Text(model.hpCsv[0][1].toString()),
+                                  child: Text('model.hpCsv[0][1].toString()'),
                                 ),
                               ),
                             ],
