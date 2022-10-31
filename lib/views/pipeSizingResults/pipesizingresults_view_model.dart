@@ -192,7 +192,7 @@ class PipeSizingResultsViewModel extends ChangeNotifier {
   }
 
   String getTDTableRefLp(String value) {
-    var retVal = '';
+    var retVal = 'N/A';
     String slicedVal = value.substring(1, value.length - 1);
     double valFromString = stringToDoubleTryParse(slicedVal);
 
