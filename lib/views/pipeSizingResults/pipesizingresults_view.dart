@@ -12,12 +12,9 @@ class PipeSizingResults extends StatelessWidget {
 
     return ViewModelBuilder<PipeSizingResultsViewModel>.reactive(
         viewModelBuilder: () => PipeSizingResultsViewModel(),
-        onModelReady: (viewModel) async => await viewModel.getLpHpLists(),
+        // onModelReady: (viewModel) async =>
         builder: (context, model, child) {
-          // print('running get lists ');
-          // model.getLpHpLists;
-          // print(model.hp.length);
-          // print(model.lp.length);
+          model.getLpHpLists();
           return Scaffold(
             body: ListView(
               children: [
@@ -92,7 +89,7 @@ class PipeSizingResults extends StatelessWidget {
                 Container(
                   height: height * 0.25,
                   child: ListView.builder(
-                      itemCount: model.hp.length,
+                      itemCount: model.reducedHP.length,
                       itemBuilder: (BuildContext context, int index) {
                         //
                         return Container(
@@ -109,8 +106,8 @@ class PipeSizingResults extends StatelessWidget {
                                 height: height * 0.06,
                                 width: width * 0.2,
                                 child: Center(
-                                    child:
-                                        Text(model.hp[index].keys.toString())),
+                                    child: Text(model.reducedHP[index].keys
+                                        .toString())),
                               ),
                               Container(
                                 decoration: BoxDecoration(
@@ -119,8 +116,8 @@ class PipeSizingResults extends StatelessWidget {
                                 height: height * 0.06,
                                 width: width * 0.2,
                                 child: Center(
-                                    child: Text(
-                                        model.hp[index].values.toString())),
+                                    child: Text(model.reducedHP[index].values
+                                        .toString())),
                               ),
                               Container(
                                 decoration: BoxDecoration(
@@ -129,18 +126,42 @@ class PipeSizingResults extends StatelessWidget {
                                 height: height * 0.06,
                                 width: width * 0.2,
                                 child: Center(
-                                  child: Text(''),
+                                  child: Text(model.getTDTableRefHp(model
+                                      .reducedHP[index].values
+                                      .toString())),
                                 ),
                               ),
-                              Container(
-                                decoration: BoxDecoration(
-                                  border: Border.all(),
-                                ),
-                                height: height * 0.06,
-                                width: width * 0.2,
-                                child: Center(
-                                  child: Text(''),
-                                ),
+                              FutureBuilder<String>(
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return CircularProgressIndicator();
+                                  } else if (snapshot.connectionState ==
+                                      ConnectionState.done) {
+                                    if (snapshot.hasError) {
+                                      return const Text('Error');
+                                    } else if (snapshot.hasData) {
+                                      //String snapInformation = "";snapInformation = snapshot.data!;
+                                      return Container(
+                                        decoration: BoxDecoration(
+                                          border: Border.all(),
+                                        ),
+                                        height: height * 0.06,
+                                        width: width * 0.2,
+                                        child: Center(
+                                          child: Text(snapshot.data!),
+                                        ),
+                                      );
+                                    } else {
+                                      return const Text('Empty data');
+                                    }
+                                  } else {
+                                    return Text(
+                                        'State: ${snapshot.connectionState}');
+                                  }
+                                },
+                                future: model.getCopperSizeHp(
+                                    model.reducedHP[index].values.toString()),
                               ),
                             ],
                           ),
@@ -223,7 +244,7 @@ class PipeSizingResults extends StatelessWidget {
                   child: ListView.builder(
                       itemCount: model.reducedLP.length,
                       itemBuilder: (BuildContext context, int index) {
-                        //
+                        print(model.reducedLP[index].values.toString());
                         return Container(
                           height: 50,
                           // width: width * 0.95,
@@ -238,8 +259,8 @@ class PipeSizingResults extends StatelessWidget {
                                 height: height * 0.06,
                                 width: width * 0.2,
                                 child: Center(
-                                    child:
-                                        Text(model.lp[index].keys.toString())),
+                                    child: Text(model.reducedLP[index].keys
+                                        .toString())),
                               ),
                               Container(
                                 decoration: BoxDecoration(
@@ -248,8 +269,8 @@ class PipeSizingResults extends StatelessWidget {
                                 height: height * 0.06,
                                 width: width * 0.2,
                                 child: Center(
-                                    child: Text(
-                                        model.lp[index].values.toString())),
+                                    child: Text(model.reducedLP[index].values
+                                        .toString())),
                               ),
                               Container(
                                 decoration: BoxDecoration(
@@ -258,19 +279,42 @@ class PipeSizingResults extends StatelessWidget {
                                 height: height * 0.06,
                                 width: width * 0.2,
                                 child: Center(
-                                  child: Text(
-                                      "model.getTDTableRefLp(model.lp[index].values.toString())"),
+                                  child: Text(model.getTDTableRefLp(model
+                                      .reducedHP[index].values
+                                      .toString())),
                                 ),
                               ),
-                              Container(
-                                decoration: BoxDecoration(
-                                  border: Border.all(),
-                                ),
-                                height: height * 0.06,
-                                width: width * 0.2,
-                                child: Center(
-                                  child: Text('model.hpCsv[0][1].toString()'),
-                                ),
+                              FutureBuilder<String>(
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return CircularProgressIndicator();
+                                  } else if (snapshot.connectionState ==
+                                      ConnectionState.done) {
+                                    if (snapshot.hasError) {
+                                      return const Text('Error');
+                                    } else if (snapshot.hasData) {
+                                      //String snapInformation = "";snapInformation = snapshot.data!;
+                                      return Container(
+                                        decoration: BoxDecoration(
+                                          border: Border.all(),
+                                        ),
+                                        height: height * 0.06,
+                                        width: width * 0.2,
+                                        child: Center(
+                                          child: Text(snapshot.data!),
+                                        ),
+                                      );
+                                    } else {
+                                      return const Text('Empty data');
+                                    }
+                                  } else {
+                                    return Text(
+                                        'State: ${snapshot.connectionState}');
+                                  }
+                                },
+                                future: model.getCopperSizeLp(
+                                    model.reducedHP[index].values.toString()),
                               ),
                             ],
                           ),

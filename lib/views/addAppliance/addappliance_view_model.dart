@@ -33,7 +33,7 @@ class AddApplianceViewModel extends ChangeNotifier {
     return numericRegex.hasMatch(string);
   }
 
-  double stringToDouble_tryParse(String input) {
+  double stringToDoubleTryParse(String input) {
     print('in stringtodouble');
     double fromString = 0;
     fromString = double.tryParse(input)!;
@@ -48,10 +48,10 @@ class AddApplianceViewModel extends ChangeNotifier {
   void tdUnitSet(String val) {
     thisAppliance.tdUnit = val;
     if (val == 'kg') {
-      thisAppliance.tdKG = stringToDouble_tryParse(totalDemandController.text);
+      thisAppliance.tdKG = stringToDoubleTryParse(totalDemandController.text);
       thisAppliance.tdMu = thisAppliance.tdKG * 50;
     } else {
-      thisAppliance.tdMu = stringToDouble_tryParse(totalDemandController.text);
+      thisAppliance.tdMu = stringToDoubleTryParse(totalDemandController.text);
       thisAppliance.tdKG = thisAppliance.tdMu / 50;
     }
     // thisAppliance.td
@@ -97,7 +97,7 @@ class AddApplianceViewModel extends ChangeNotifier {
     for (var element in segmentValidate) {
       diffLengths = element.segments.entries.where((element) =>
           element.value.segmentMeters !=
-          stringToDouble_tryParse(metersController.text.trim()));
+          stringToDoubleTryParse(metersController.text.trim()));
     }
     print('diff lenghts' + diffLengths.toString());
     if (diffLengths.isNotEmpty) {
@@ -109,13 +109,13 @@ class AddApplianceViewModel extends ChangeNotifier {
       thisAppliance.segments[segmentLabelController.text.trim()] =
           Segment(0, lineHpLp);
       thisAppliance.segments[segmentLabelController.text.trim()]!
-          .segmentMeters = stringToDouble_tryParse(metersController.text);
+          .segmentMeters = stringToDoubleTryParse(metersController.text);
       thisAppliance.segments[segmentLabelController.text.trim()]!.lineHpLp =
           lineHpLp;
       if (lineHpLp == "hp") {
-        thisAppliance.totalHp += stringToDouble_tryParse(metersController.text);
+        thisAppliance.totalHp += stringToDoubleTryParse(metersController.text);
       } else {
-        thisAppliance.totalLp += stringToDouble_tryParse(metersController.text);
+        thisAppliance.totalLp += stringToDoubleTryParse(metersController.text);
       }
       notifyListeners();
     }
@@ -168,9 +168,9 @@ class AddApplianceViewModel extends ChangeNotifier {
   }
 
   double calculateTotalLength() {
-    double elbows = stringToDouble_tryParse(elbowsController.text),
-        tees = stringToDouble_tryParse(teesController.text),
-        bends = stringToDouble_tryParse(bendsController.text);
+    double elbows = stringToDoubleTryParse(elbowsController.text),
+        tees = stringToDoubleTryParse(teesController.text),
+        bends = stringToDoubleTryParse(bendsController.text);
     double a = (elbows * 0.8);
     double b = bends * 0.6;
     double c = tees * 0.8;

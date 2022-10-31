@@ -17,7 +17,7 @@ class AddRooms extends StatelessWidget {
           return Scaffold(
             body: Padding(
               padding: const EdgeInsets.fromLTRB(8.0, 0, 8.0, 0),
-              child: ListView(
+              child: Column(
                 children: [
                   SizedBox(
                     height: height * 0.03,
