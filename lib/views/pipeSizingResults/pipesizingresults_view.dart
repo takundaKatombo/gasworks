@@ -284,37 +284,17 @@ class PipeSizingResults extends StatelessWidget {
                                       .toString())),
                                 ),
                               ),
-                              FutureBuilder<String>(
-                                builder: (context, snapshot) {
-                                  if (snapshot.connectionState ==
-                                      ConnectionState.waiting) {
-                                    return CircularProgressIndicator();
-                                  } else if (snapshot.connectionState ==
-                                      ConnectionState.done) {
-                                    if (snapshot.hasError) {
-                                      return const Text('Error');
-                                    } else if (snapshot.hasData) {
-                                      //String snapInformation = "";snapInformation = snapshot.data!;
-                                      return Container(
-                                        decoration: BoxDecoration(
-                                          border: Border.all(),
-                                        ),
-                                        height: height * 0.06,
-                                        width: width * 0.2,
-                                        child: Center(
-                                          child: Text(snapshot.data!),
-                                        ),
-                                      );
-                                    } else {
-                                      return const Text('Empty data');
-                                    }
-                                  } else {
-                                    return Text(
-                                        'State: ${snapshot.connectionState}');
-                                  }
-                                },
-                                future: model.getCopperSizeLp(
-                                    model.reducedHP[index].values.toString()),
+                              Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(),
+                                ),
+                                height: height * 0.06,
+                                width: width * 0.2,
+                                child: Center(
+                                  child: Text(model.getCopperSizeLp(model
+                                      .reducedHP[index].values
+                                      .toString())),
+                                ),
                               ),
                             ],
                           ),

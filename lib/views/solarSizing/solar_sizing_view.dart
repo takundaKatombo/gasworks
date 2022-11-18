@@ -39,7 +39,7 @@ class SolarSizing extends StatelessWidget {
                       height: height * 0.05,
                       width: width * 0.3,
                       child: Center(
-                        child: Text("Daily Consumption kW"),
+                        child: Text("Daily Consumption(kW)"),
                       ),
                     ),
                     Container(
@@ -174,7 +174,7 @@ class SolarSizing extends StatelessWidget {
                           height: height * 0.05,
                           width: width * 0.2,
                           child: Center(
-                            child: Text(model.dailyPower.toString()),
+                            child: Text(model.dailyPower.toStringAsFixed(2)),
                           ),
                         )
                       ],
@@ -200,7 +200,7 @@ class SolarSizing extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(20.0),
                 child: Text(
-                  " Sizing the Invertor (Panels Configured In Series)",
+                  " Sizing the Invertor(Panels In Series)",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                 ),
               ),
@@ -247,7 +247,7 @@ class SolarSizing extends StatelessWidget {
               ),
               Container(
                 width: width * 0.95,
-                padding: EdgeInsets.all(4),
+                padding: EdgeInsets.all(8),
                 color: Colors.blue.shade100,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -327,140 +327,158 @@ class SolarSizing extends StatelessWidget {
                 height: height * 0.01,
               ),
               Container(
-                width: width * 0.95,
-                padding: EdgeInsets.all(4),
+                width: width,
+                padding: EdgeInsets.all(7),
                 color: Colors.blue.shade100,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.blue.shade100,
-                        border: Border.all(),
-                      ),
-                      height: height * 0.05,
-                      width: width * 0.3,
-                      child: Center(
-                        child: Text("Max PV Array Power of your invertor (Wp)"),
-                      ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.blue.shade100,
+                            border: Border.all(),
+                          ),
+                          height: height * 0.05,
+                          width: width * 0.32,
+                          child: Center(
+                            child: Text(
+                                "Max PV Array Power of your invertor (Wp)"),
+                          ),
+                        ),
+                        SizedBox(
+                          height: height * 0.01,
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.blue.shade100,
+                            border: Border.all(),
+                          ),
+                          height: height * 0.05,
+                          width: width * 0.32,
+                          child: Center(
+                            child: Text("Max Dc Input of your invertor (Vdc)"),
+                          ),
+                        ),
+                        SizedBox(
+                          height: height * 0.01,
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.blue.shade100,
+                            border: Border.all(),
+                          ),
+                          height: height * 0.05,
+                          width: width * 0.4,
+                          child: Center(
+                            child: Text(
+                                "Max PV Charging  input Current of your invertor (A)"),
+                          ),
+                        ),
+                      ],
                     ),
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.blue.shade100,
-                        border: Border.all(),
-                      ),
-                      height: height * 0.05,
-                      width: width * 0.3,
-                      child: Center(
-                        child: Text("Max Dc Input of your invertor (Vdc)"),
-                      ),
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.blue.shade100,
-                        border: Border.all(),
-                      ),
-                      height: height * 0.05,
-                      width: width * 0.3,
-                      child: Center(
-                        child: Text(
-                            "Max PV Charging  input Current of your invertor (A)"),
-                      ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Container(
+                          height: height * 0.05,
+                          width: width * 0.55,
+                          child: Center(
+                            child: TextFormField(
+                              // decoration: const InputDecoration(
+                              //     errorMaxLines: 3,
+                              //     errorStyle: TextStyle(fontSize: 10)),
+                              controller: model.wpController,
+                              keyboardType: TextInputType.number,
+                              validator: (val) {
+                                if (model.wpController.text.isNotEmpty) {
+                                  if (model
+                                      .isNumericUsingRegularExpression(val!)) {
+                                    if (model.stringToDouble_tryParse(val)! <
+                                        model.maxPVPowerWatts) {
+                                      return 'cannot be less than ${model.maxPVPowerWatts}';
+                                    } else {
+                                      return null;
+                                    }
+                                  } else {
+                                    return 'can only be numeric';
+                                  }
+                                }
+                              },
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: height * 0.01,
+                        ),
+                        Container(
+                          height: height * 0.05,
+                          width: width * 0.4,
+                          child: Center(
+                            child: TextFormField(
+                              controller: model.vdcController,
+                              keyboardType: TextInputType.number,
+                              validator: (val) {
+                                if (model.vdcController.text.isNotEmpty) {
+                                  if (model
+                                      .isNumericUsingRegularExpression(val!)) {
+                                    if (model.stringToDouble_tryParse(val)! <
+                                        model.minVdc) {
+                                      return 'cannot be less than ${model.minVdc}';
+                                    } else {
+                                      return null;
+                                    }
+                                  } else {
+                                    return 'can only be numeric';
+                                    // return 'Height can only be a number ';
+                                  }
+                                } else {
+                                  return null;
+                                }
+                              },
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: height * 0.01,
+                        ),
+                        Container(
+                          height: height * 0.05,
+                          width: width * 0.4,
+                          child: Center(
+                            child: TextFormField(
+                              controller: model.chargingInputCurrentController,
+                              keyboardType: TextInputType.number,
+                              validator: (val) {
+                                if (model.chargingInputCurrentController.text
+                                    .isNotEmpty) {
+                                  if (model
+                                      .isNumericUsingRegularExpression(val!)) {
+                                    if (model.stringToDouble_tryParse(val)! <
+                                        model.panelShortCircuitCurrent) {
+                                      return 'cannot be less than ${model.panelShortCircuitCurrent}';
+                                    } else {
+                                      return null;
+                                    }
+                                  } else {
+                                    return 'can only be numeric';
+                                    // return 'Height can only be a number ';
+                                  }
+                                } else {
+                                  return null;
+                                }
+                              },
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
-              ),
-              Container(
-                width: width * 0.95,
-                padding: EdgeInsets.all(4),
-                color: Colors.blue.shade100,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Container(
-                      height: height * 0.05,
-                      width: width * 0.3,
-                      child: Center(
-                        child: TextFormField(
-                          controller: model.wpController,
-                          keyboardType: TextInputType.number,
-                          validator: (val) {
-                            if (model.wpController.text.isNotEmpty) {
-                              if (model.isNumericUsingRegularExpression(val!)) {
-                                if (model.stringToDouble_tryParse(val)! <
-                                    model.maxPVPowerWatts) {
-                                  return 'cannot be less than Short Circuit Current of Panel';
-                                } else {
-                                  return null;
-                                }
-                              } else {
-                                return 'can only be numeric';
-                              }
-                            }
-                          },
-                        ),
-                      ),
-                    ),
-                    Container(
-                      height: height * 0.05,
-                      width: width * 0.3,
-                      child: Center(
-                        child: TextFormField(
-                          controller: model.vdcController,
-                          keyboardType: TextInputType.number,
-                          validator: (val) {
-                            if (model.vdcController.text.isNotEmpty) {
-                              if (model.isNumericUsingRegularExpression(val!)) {
-                                if (model.stringToDouble_tryParse(val)! <
-                                    model.minVdc) {
-                                  return 'cannot be less than Short Circuit Current of Panel';
-                                } else {
-                                  return null;
-                                }
-                              } else {
-                                return 'can only be numeric';
-                                // return 'Height can only be a number ';
-                              }
-                            } else {
-                              return null;
-                            }
-                          },
-                        ),
-                      ),
-                    ),
-                    Container(
-                      height: height * 0.05,
-                      width: width * 0.3,
-                      child: Center(
-                        child: TextFormField(
-                          controller: model.chargingInputCurrentController,
-                          keyboardType: TextInputType.number,
-                          validator: (val) {
-                            if (model.chargingInputCurrentController.text
-                                .isNotEmpty) {
-                              if (model.isNumericUsingRegularExpression(val!)) {
-                                if (model.stringToDouble_tryParse(val)! <
-                                    model.panelShortCircuitCurrent) {
-                                  return 'cannot be less than Short Circuit Current of Panel';
-                                } else {
-                                  return null;
-                                }
-                              } else {
-                                return 'can only be numeric';
-                                // return 'Height can only be a number ';
-                              }
-                            } else {
-                              return null;
-                            }
-                          },
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(
-                height: height * 0.01,
               ),
             ]),
           )),

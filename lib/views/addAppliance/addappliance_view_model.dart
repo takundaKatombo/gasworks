@@ -89,8 +89,20 @@ class AddApplianceViewModel extends ChangeNotifier {
     // } else {
 
     // }
+    bool segValidateFlag = false;
     Iterable<MapEntry<String, Segment>> diffLengths =
         []; //Todo: loop through list with for to check if any appliance has same segment .... similar to loop for checking duplicates
+    roomsList.appliances.forEach((key, value) {
+      if (value.segments.containsKey(segmentLabelController.text.trim())) {
+        value.segments.forEach((key, value) {
+          if (key == segmentLabelController.text.trim() &&
+              value.segmentMeters !=
+                  stringToDoubleTryParse(metersController.text.trim())) {
+            segValidateFlag = true;
+          }
+        });
+      }
+    }); //use to loop through appliances ?
     var segmentValidate = roomsList.appliances.values.where((element) =>
         element.segments.containsKey(segmentLabelController.text.trim()));
     print('seg valiudate' + segmentValidate.toString());
@@ -100,7 +112,7 @@ class AddApplianceViewModel extends ChangeNotifier {
           stringToDoubleTryParse(metersController.text.trim()));
     }
     print('diff lenghts' + diffLengths.toString());
-    if (diffLengths.isNotEmpty) {
+    if (segValidateFlag) {
       await _dialogService.showDialog(
           title: 'Segment Exits',
           description:

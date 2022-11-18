@@ -102,7 +102,7 @@ class PipeSizingResultsViewModel extends ChangeNotifier {
     }
   }
 
-  Future<String> getCopperSizeLp(String value) async {
+  String getCopperSizeLp(String value) {
     print("value coppersizelp :" + value);
     var retVal = '';
     double valFromString = stringToDoubleTryParse(value);

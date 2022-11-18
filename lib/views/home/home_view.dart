@@ -12,6 +12,7 @@ class HomeView extends StatelessWidget {
     return ViewModelBuilder<HomeViewModel>.nonReactive(
       builder: (context, model, child) {
         return Scaffold(
+          resizeToAvoidBottomInset: false,
           body: Container(
             child: Center(
               child: Column(
