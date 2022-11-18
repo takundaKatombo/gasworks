@@ -12,6 +12,7 @@ class HomeView extends StatelessWidget {
     return ViewModelBuilder<HomeViewModel>.nonReactive(
       builder: (context, model, child) {
         return Scaffold(
+          resizeToAvoidBottomInset: false,
           body: Container(
             child: Center(
               child: Column(
@@ -64,6 +65,22 @@ class HomeView extends StatelessWidget {
                         ),
                         label: Text(
                           'Ref Info',
+                          style: TextStyle(fontSize: 30),
+                        )),
+                  ),
+                  Container(
+                    width: width * 0.8,
+                    height: height * 0.15,
+                    child: ElevatedButton.icon(
+                        onPressed: () {
+                          model.solarSizingPressed();
+                        },
+                        icon: Icon(
+                          Icons.line_weight,
+                          size: 90,
+                        ),
+                        label: Text(
+                          'Solar Sizing',
                           style: TextStyle(fontSize: 30),
                         )),
                   ),
