@@ -67,6 +67,22 @@ class HomeView extends StatelessWidget {
                           style: TextStyle(fontSize: 30),
                         )),
                   ),
+                  Container(
+                    width: width * 0.8,
+                    height: height * 0.15,
+                    child: ElevatedButton.icon(
+                        onPressed: () {
+                          model.solarSizingPressed();
+                        },
+                        icon: Icon(
+                          Icons.line_weight,
+                          size: 90,
+                        ),
+                        label: Text(
+                          'Solar Sizing',
+                          style: TextStyle(fontSize: 30),
+                        )),
+                  ),
                 ],
               ),
             ),

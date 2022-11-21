@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:gasworks/constants/route_names.dart';
 import 'package:gasworks/views/addAppliance/addappliance_view.dart';
 import 'package:gasworks/views/home/home_view.dart';
+import 'package:gasworks/views/pipeSizingResults/pipesizingresults_view.dart';
 import 'package:gasworks/views/undefined.dart';
 
 import '../views/addrooms/addrooms_view.dart';
 import '../views/createsite/createsite_view.dart';
+import '../views/solarSizing/solar_sizing_view.dart';
 
 Route<dynamic> generateRoute(RouteSettings settings) {
   switch (settings.name) {
@@ -20,8 +22,10 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return MaterialPageRoute(builder: (context) => AddRooms());
     case AddAppliancesRoute:
       return MaterialPageRoute(builder: (context) => AddAppliance());
-    // case PipeSizingResultsRoute:
-    //   return MaterialPageRoute(builder: (context) => Metrics());
+    case PipeSizingResultsRoute:
+      return MaterialPageRoute(builder: (context) => PipeSizingResults());
+    case SolarSizingRoute:
+      return MaterialPageRoute(builder: (context) => SolarSizing());
     default:
       return MaterialPageRoute(builder: (context) => Undefined());
   }

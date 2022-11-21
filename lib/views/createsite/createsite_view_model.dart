@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gasworks/constants/route_names.dart';
-import 'package:gasworks/models/basemodel.dart';
+import 'package:gasworks/models/base_view_model.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 import '../../locator.dart';
